@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Prompt Generator</title>
+  <title>PromptCraft | AI Prompt Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,91 +12,73 @@
       font-family: 'Inter', sans-serif;
     }
     
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #10b981;
+      --dark: #0f172a;
+      --light: #f8fafc;
+    }
+    
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-color: var(--light);
       min-height: 100vh;
+      color: #1e293b;
     }
     
     .dark body {
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+      background-color: var(--dark);
+      color: #e2e8f0;
     }
     
-    .glass-morphism {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     
-    .dark .glass-morphism {
-      background: rgba(0, 0, 0, 0.3);
+    .dark .card {
+      background: rgba(15, 23, 42, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .neon-glow {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      transition: all 0.3s ease;
     }
     
-    .dark .neon-glow {
-      box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.3);
     }
     
-    .cyber-border {
-      position: relative;
-      background: linear-gradient(45deg, #00f5ff, #ff00ff, #00f5ff);
-      background-size: 200% 200%;
-      animation: gradient-shift 3s ease infinite;
-      padding: 2px;
-      border-radius: 12px;
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--secondary), #059669);
+      color: white;
+      transition: all 0.3s ease;
     }
     
-    .cyber-border > * {
-      background: white;
-      border-radius: 10px;
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
     }
     
-    .dark .cyber-border > * {
-      background: #1f2937;
-    }
-    
-    @keyframes gradient-shift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    .pulse-animation {
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.8; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    
-    .typing-animation {
-      border-right: 2px solid #3b82f6;
-      animation: blink 1s infinite;
-    }
-    
-    @keyframes blink {
-      0%, 50% { border-color: transparent; }
-      51%, 100% { border-color: #3b82f6; }
-    }
-    
-    .gradient-text {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .text-gradient {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     
-    .dark .gradient-text {
-      background: linear-gradient(135deg, #00f5ff 0%, #ff00ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .glow {
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+    
+    .dark .glow {
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
     }
     
     .floating {
@@ -105,101 +87,133 @@
     
     @keyframes floating {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
+      50% { transform: translateY(-15px); }
     }
     
     .slide-in {
-      animation: slideIn 0.5s ease-out;
+      animation: slideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
     
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
     
     /* Custom scrollbar */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
+      height: 6px;
     }
     
     ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.05);
       border-radius: 10px;
     }
     
     ::-webkit-scrollbar-thumb {
-      background: linear-gradient(45deg, #667eea, #764ba2);
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
       border-radius: 10px;
     }
     
-    .dark ::-webkit-scrollbar-thumb {
-      background: linear-gradient(45deg, #00f5ff, #ff00ff);
+    .dark ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
     }
     
-    /* Responsive adjustments */
-    @media (max-width: 640px) {
-      .glass-morphism {
-        margin: 10px;
-        padding: 20px;
-      }
+    /* Input styles */
+    .input-field {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .dark .input-field {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    .dark .input-field:focus {
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
     }
     
     /* Loading animation */
-    .loading-dots {
-      display: inline-block;
+    .loading-spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(99, 102, 241, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
     
-    .loading-dots::after {
-      content: '';
-      animation: loading 1.5s infinite;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
     
-    @keyframes loading {
-      0% { content: '.'; }
-      33% { content: '..'; }
-      66% { content: '...'; }
-      100% { content: '.'; }
+    /* Background pattern */
+    .bg-pattern {
+      background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+                       radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 20%);
+    }
+    
+    .dark .bg-pattern {
+      background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+                       radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 20%);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .flex-col-mobile {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen transition-all duration-300">
+<body class="min-h-screen bg-pattern transition-colors duration-300">
   <div id="app" class="min-h-screen">
-    <!-- Background particles -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-      <div id="particles"></div>
-    </div>
-    
     <!-- Auth Screens -->
-    <div id="auth-container" class="flex items-center justify-center min-h-screen px-4">
+    <div id="auth-container" class="flex items-center justify-center min-h-screen px-4 py-12">
       <div class="w-full max-w-md">
-        <!-- Login/Signup Screen -->
-        <div id="auth-screen" class="glass-morphism rounded-2xl p-8 slide-in">
+        <div id="auth-screen" class="card p-8 slide-in">
           <div class="text-center mb-8">
-            <div class="floating">
-              <i class="fas fa-brain text-6xl gradient-text mb-4"></i>
+            <div class="floating inline-block">
+              <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-lg">
+                <i class="fas fa-magic text-3xl text-white"></i>
+              </div>
             </div>
-            <h1 class="text-4xl font-bold text-white mb-2 gradient-text">AI Prompt Generator</h1>
-            <p class="text-gray-200 dark:text-gray-300">Unleash the power of AI with perfect prompts</p>
+            <h1 class="text-3xl font-bold mt-6 text-gradient">PromptCraft</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">Craft perfect AI prompts with ease</p>
           </div>
           
-          <div id="error-message" class="hidden bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-4 backdrop-blur-sm"></div>
+          <div id="error-message" class="hidden bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg mb-4 text-sm"></div>
           
           <!-- Google Sign In Button -->
-          <button id="google-signin-btn" class="w-full cyber-border mb-6 group hover:scale-105 transition-all duration-300">
-            <div class="flex items-center justify-center py-4 px-6 space-x-3">
-              <svg class="w-6 h-6" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              <span class="text-gray-700 dark:text-white font-semibold">Continue with Google</span>
-            </div>
+          <button id="google-signin-btn" class="w-full flex items-center justify-center py-3 px-6 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors mb-6">
+            <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span class="font-medium text-slate-700 dark:text-slate-200">Continue with Google</span>
           </button>
           
-          <div class="text-center text-gray-300 text-sm">
-            <i class="fas fa-shield-alt mr-2"></i>
-            Secure authentication powered by Firebase
+          <div class="text-center text-slate-400 text-xs">
+            <i class="fas fa-lock mr-1"></i>
+            Secure authentication with Firebase
           </div>
         </div>
       </div>
@@ -208,39 +222,36 @@
     <!-- Main App -->
     <div id="app-container" class="hidden">
       <!-- Navigation -->
-      <nav class="glass-morphism border-b border-white/10 px-6 py-4">
+      <nav class="card border-b border-slate-100 dark:border-slate-800 px-6 py-4 mx-4 mt-4">
         <div class="container mx-auto flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <i class="fas fa-brain text-2xl gradient-text"></i>
-            <h1 class="text-xl font-bold text-white gradient-text">AI Prompt Generator</h1>
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center">
+              <i class="fas fa-magic text-white text-sm"></i>
+            </div>
+            <h1 class="text-lg font-bold text-gradient">PromptCraft</h1>
           </div>
           
-          <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-3">
             <!-- Theme Toggle -->
-            <button id="theme-toggle" class="p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300">
-              <i class="fas fa-moon text-white dark:hidden"></i>
-              <i class="fas fa-sun text-white hidden dark:inline"></i>
-            </button>
-            
-            <!-- Settings Button -->
-            <button id="settings-btn" class="p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300">
-              <i class="fas fa-cog text-white"></i>
+            <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+              <i class="fas fa-moon text-slate-700 dark:hidden"></i>
+              <i class="fas fa-sun text-yellow-400 hidden dark:inline"></i>
             </button>
             
             <!-- User Profile -->
             <div id="user-menu" class="relative">
-              <button id="user-menu-btn" class="flex items-center space-x-2 glass-morphism px-4 py-2 rounded-lg hover:neon-glow transition-all duration-300">
-                <img id="user-avatar" src="" alt="User" class="w-8 h-8 rounded-full">
-                <span id="user-name" class="text-white font-medium hidden md:inline"></span>
-                <i class="fas fa-chevron-down text-white text-sm"></i>
+              <button id="user-menu-btn" class="flex items-center space-x-2">
+                <img id="user-avatar" src="" alt="User" class="w-8 h-8 rounded-full border-2 border-white dark:border-slate-800 shadow">
+                <span id="user-name" class="font-medium text-slate-700 dark:text-slate-200 hidden md:inline text-sm"></span>
               </button>
               
-              <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 glass-morphism rounded-lg shadow-xl z-50">
-                <div class="py-2">
-                  <button id="logout-btn" class="w-full text-left px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                  </button>
-                </div>
+              <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 card shadow-lg z-50 py-1">
+                <button id="settings-btn" class="w-full text-left px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm">
+                  <i class="fas fa-cog mr-2"></i> Settings
+                </button>
+                <button id="logout-btn" class="w-full text-left px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm">
+                  <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
               </div>
             </div>
           </div>
@@ -249,19 +260,19 @@
       
       <!-- Settings Panel -->
       <div id="settings-panel" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="glass-morphism rounded-2xl p-8 w-full max-w-md">
+        <div class="card p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-white gradient-text">Settings</h2>
-            <button id="close-settings" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
-              <i class="fas fa-times text-white"></i>
+            <h2 class="text-xl font-bold text-gradient">Settings</h2>
+            <button id="close-settings" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+              <i class="fas fa-times text-slate-500 dark:text-slate-400"></i>
             </button>
           </div>
           
-          <div class="space-y-6">
+          <div class="space-y-5">
             <!-- API Provider -->
             <div>
-              <label class="block text-white font-medium mb-2">AI Provider</label>
-              <select id="api-provider" class="w-full p-3 rounded-lg glass-morphism text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">AI Provider</label>
+              <select id="api-provider" class="w-full input-field text-sm p-3 rounded-lg">
                 <option value="openai">OpenAI GPT</option>
                 <option value="anthropic">Anthropic Claude</option>
                 <option value="google">Google Gemini</option>
@@ -270,87 +281,90 @@
             
             <!-- API Key -->
             <div>
-              <label class="block text-white font-medium mb-2">API Key</label>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">API Key</label>
               <div class="relative">
-                <input type="password" id="api-key" placeholder="Enter your API key" 
-                  class="w-full p-3 rounded-lg glass-morphism text-white placeholder-gray-400 border border-white/20 focus:border-blue-400 focus:outline-none pr-12">
-                <button id="toggle-api-key" class="absolute right-3 top-3 text-gray-400 hover:text-white">
+                <input type="password" id="api-key" placeholder="sk-... or your API key" 
+                  class="w-full input-field text-sm p-3 rounded-lg pr-12">
+                <button id="toggle-api-key" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
-              <p class="text-sm text-gray-300 mt-1">Your API key is stored locally and never shared</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Your API key is stored locally and never shared</p>
             </div>
             
             <!-- Temperature -->
             <div>
-              <label class="block text-white font-medium mb-2">Creativity Level</label>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Creativity Level: <span id="temperature-value" class="font-bold">0.7</span></label>
               <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7" 
-                class="w-full h-2 rounded-lg appearance-none cursor-pointer">
-              <div class="flex justify-between text-sm text-gray-300 mt-1">
-                <span>Focused</span>
-                <span id="temperature-value">0.7</span>
+                class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
+              <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <span>Precise</span>
+                <span>Balanced</span>
                 <span>Creative</span>
               </div>
             </div>
             
             <!-- Max Tokens -->
             <div>
-              <label class="block text-white font-medium mb-2">Response Length</label>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Response Length: <span id="max-tokens-value" class="font-bold">500</span> tokens</label>
               <input type="range" id="max-tokens" min="100" max="2000" step="100" value="500" 
-                class="w-full h-2 rounded-lg appearance-none cursor-pointer">
-              <div class="flex justify-between text-sm text-gray-300 mt-1">
+                class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
+              <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
                 <span>Short</span>
-                <span id="max-tokens-value">500</span>
+                <span>Medium</span>
                 <span>Long</span>
               </div>
             </div>
           </div>
           
-          <button id="save-settings" class="w-full mt-8 cyber-border">
-            <div class="py-3 px-6 text-center font-semibold text-gray-800 dark:text-white">
-              Save Settings
-            </div>
+          <button id="save-settings" class="w-full mt-6 btn-primary py-2.5 px-6 rounded-lg font-medium">
+            Save Settings
           </button>
         </div>
       </div>
       
       <!-- Main Content -->
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-4 py-6">
         <!-- Welcome Card -->
-        <div class="glass-morphism rounded-2xl p-8 mb-8 text-center">
-          <div class="floating">
-            <i class="fas fa-magic text-5xl gradient-text mb-4"></i>
+        <div class="card p-6 mb-6">
+          <div class="flex flex-col md:flex-row items-center">
+            <div class="floating mb-4 md:mb-0 md:mr-6">
+              <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-lg">
+                <i class="fas fa-sparkles text-2xl text-white"></i>
+              </div>
+            </div>
+            <div class="text-center md:text-left">
+              <h2 class="text-2xl font-bold text-gradient">Craft Your Perfect AI Prompt</h2>
+              <p class="text-slate-600 dark:text-slate-300 mt-2">
+                Transform your ideas into powerful AI prompts optimized for your specific needs across different AI models.
+              </p>
+            </div>
           </div>
-          <h2 class="text-3xl font-bold text-white gradient-text mb-4">Create Perfect AI Prompts</h2>
-          <p class="text-gray-200 max-w-2xl mx-auto">
-            Transform your ideas into powerful AI prompts. Our intelligent generator creates optimized prompts 
-            tailored for your specific needs across different AI models and use cases.
-          </p>
         </div>
         
         <!-- Prompt Generator -->
-        <div class="grid lg:grid-cols-2 gap-8">
+        <div class="grid lg:grid-cols-2 gap-6">
           <!-- Input Section -->
-          <div class="glass-morphism rounded-2xl p-6">
-            <h3 class="text-xl font-bold text-white gradient-text mb-4 flex items-center">
-              <i class="fas fa-pencil-alt mr-2"></i>
-              Generate Prompt
+          <div class="card p-5">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center">
+              <i class="fas fa-pen-nib text-indigo-500 mr-2"></i>
+              Create Your Prompt
             </h3>
             
             <form id="prompt-form" class="space-y-4">
               <div>
-                <label class="block text-white font-medium mb-2">What do you want to create?</label>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">What do you want to create?</label>
                 <textarea id="prompt-input" 
                   placeholder="e.g., Write a blog post about sustainable technology, Create a marketing campaign for a new app, Generate creative writing ideas..."
                   required
-                  class="w-full h-32 p-4 rounded-lg glass-morphism text-white placeholder-gray-400 border border-white/20 focus:border-blue-400 focus:outline-none resize-none"
+                  class="w-full input-field p-4 rounded-lg h-32 resize-none"
                 ></textarea>
               </div>
               
-              <div class="grid grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-white font-medium mb-2">Category</label>
-                  <select id="category-select" class="w-full p-3 rounded-lg glass-morphism text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Category</label>
+                  <select id="category-select" class="w-full input-field p-3 text-sm">
                     <option value="general">General</option>
                     <option value="writing">Writing</option>
                     <option value="coding">Programming</option>
@@ -363,8 +377,8 @@
                 </div>
                 
                 <div>
-                  <label class="block text-white font-medium mb-2">Style</label>
-                  <select id="style-select" class="w-full p-3 rounded-lg glass-morphism text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Style</label>
+                  <select id="style-select" class="w-full input-field p-3 text-sm">
                     <option value="professional">Professional</option>
                     <option value="casual">Casual</option>
                     <option value="creative">Creative</option>
@@ -375,75 +389,77 @@
                 </div>
               </div>
               
-              <button type="submit" class="w-full cyber-border group hover:scale-105 transition-all duration-300" id="generate-btn">
-                <div class="py-4 px-6 text-center font-bold text-gray-800 dark:text-white">
-                  <i class="fas fa-brain mr-2"></i>
-                  <span id="generate-text">Generate Prompt</span>
-                </div>
+              <button type="submit" class="w-full btn-primary py-3 px-6 rounded-lg font-medium" id="generate-btn">
+                <span id="generate-text">Generate Prompt</span>
+                <span id="generate-icon" class="ml-2"><i class="fas fa-bolt"></i></span>
               </button>
             </form>
           </div>
           
           <!-- Output Section -->
-          <div class="glass-morphism rounded-2xl p-6">
+          <div class="card p-5">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-xl font-bold text-white gradient-text flex items-center">
-                <i class="fas fa-lightbulb mr-2"></i>
+              <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center">
+                <i class="fas fa-lightbulb text-emerald-500 mr-2"></i>
                 Generated Prompt
               </h3>
               <div class="flex space-x-2">
-                <button id="copy-btn" class="hidden p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300 group">
-                  <i class="fas fa-copy text-white group-hover:scale-110 transition-transform"></i>
+                <button id="copy-btn" class="hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group">
+                  <i class="fas fa-copy text-slate-500 dark:text-slate-400 group-hover:text-indigo-500"></i>
                 </button>
-                <button id="regenerate-btn" class="hidden p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300 group">
-                  <i class="fas fa-redo text-white group-hover:rotate-180 transition-transform duration-500"></i>
+                <button id="regenerate-btn" class="hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group">
+                  <i class="fas fa-redo text-slate-500 dark:text-slate-400 group-hover:text-emerald-500"></i>
                 </button>
               </div>
             </div>
             
             <div id="loading-indicator" class="hidden text-center py-8">
-              <div class="inline-block w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p class="text-white">Crafting your perfect prompt<span class="loading-dots"></span></p>
+              <div class="loading-spinner mx-auto mb-4"></div>
+              <p class="text-slate-600 dark:text-slate-300 text-sm">Crafting your perfect prompt...</p>
             </div>
             
             <div id="prompt-output-container" class="hidden">
-              <div id="prompt-output" class="glass-morphism rounded-lg p-6 min-h-32 text-white whitespace-pre-wrap border border-white/20 max-h-96 overflow-y-auto"></div>
-              <div class="mt-4 text-sm text-gray-300">
-                <i class="fas fa-info-circle mr-1"></i>
+              <div id="prompt-output" class="input-field p-4 rounded-lg min-h-32 max-h-96 overflow-y-auto text-sm"></div>
+              <div class="mt-3 text-xs text-slate-500 dark:text-slate-400 flex items-center">
+                <i class="fas fa-info-circle mr-1.5"></i>
                 Click the copy button to use this prompt with your favorite AI
               </div>
             </div>
             
-            <div id="empty-state" class="text-center py-12 text-gray-400">
-              <i class="fas fa-robot text-4xl mb-4 opacity-50"></i>
-              <p>Your generated prompt will appear here</p>
+            <div id="empty-state" class="text-center py-12">
+              <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                <i class="fas fa-robot text-slate-400 dark:text-slate-500 text-2xl"></i>
+              </div>
+              <p class="text-slate-500 dark:text-slate-400 text-sm">Your generated prompt will appear here</p>
             </div>
           </div>
         </div>
         
         <!-- Chat History -->
-        <div class="mt-8 glass-morphism rounded-2xl p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h3 class="text-xl font-bold text-white gradient-text flex items-center">
-              <i class="fas fa-history mr-2"></i>
+        <div class="card p-5 mt-6">
+          <div class="flex items-center justify-between mb-5">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center">
+              <i class="fas fa-history text-indigo-500 mr-2"></i>
               Recent Prompts
             </h3>
             <div class="flex space-x-2">
-              <button id="export-btn" class="px-4 py-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300 text-white text-sm">
-                <i class="fas fa-download mr-2"></i>
+              <button id="export-btn" class="text-sm py-1.5 px-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-slate-700 dark:text-slate-300">
+                <i class="fas fa-download mr-1.5"></i>
                 Export
               </button>
-              <button id="clear-history-btn" class="px-4 py-2 rounded-lg glass-morphism hover:bg-red-500/20 transition-all duration-300 text-white text-sm">
-                <i class="fas fa-trash mr-2"></i>
+              <button id="clear-history-btn" class="text-sm py-1.5 px-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-red-600 dark:text-red-300">
+                <i class="fas fa-trash mr-1.5"></i>
                 Clear
               </button>
             </div>
           </div>
           
           <div id="chat-container" class="space-y-4 max-h-96 overflow-y-auto">
-            <div id="empty-history" class="text-center py-12 text-gray-400">
-              <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
-              <p>Your prompt history will appear here</p>
+            <div id="empty-history" class="text-center py-12">
+              <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                <i class="fas fa-comments text-slate-400 dark:text-slate-500 text-2xl"></i>
+              </div>
+              <p class="text-slate-500 dark:text-slate-400 text-sm">Your prompt history will appear here</p>
             </div>
           </div>
         </div>
@@ -477,13 +493,13 @@
 
     // Firebase configuration - Replace with your actual config
     const firebaseConfig = {
- apiKey: "AIzaSyCb06hZb9iuRkICn3KojXi1nl-5AjqhRUM",
-  authDomain: "ai-app-1de8c.firebaseapp.com",
-  projectId: "ai-app-1de8c",
-  storageBucket: "ai-app-1de8c.firebasestorage.app",
-  messagingSenderId: "976099628319",
-  appId: "1:976099628319:web:30df1077c75620ac3d8c2a",
-  measurementId: "G-27ZRW9F1RT"
+      apiKey: "AIzaSyCb06hZb9iuRkICn3KojXi1nl-5AjqhRUM",
+      authDomain: "ai-app-1de8c.firebaseapp.com",
+      projectId: "ai-app-1de8c",
+      storageBucket: "ai-app-1de8c.appspot.com",
+      messagingSenderId: "976099628319",
+      appId: "1:976099628319:web:30df1077c75620ac3d8c2a",
+      measurementId: "G-27ZRW9F1RT"
     };
 
     // Initialize Firebase
@@ -511,6 +527,7 @@
     const styleSelect = document.getElementById('style-select');
     const generateBtn = document.getElementById('generate-btn');
     const generateText = document.getElementById('generate-text');
+    const generateIcon = document.getElementById('generate-icon');
     const loadingIndicator = document.getElementById('loading-indicator');
     const promptOutputContainer = document.getElementById('prompt-output-container');
     const promptOutput = document.getElementById('prompt-output');
@@ -537,20 +554,6 @@
     let currentUser = null;
     let lastPrompt = '';
     let lastInput = '';
-
-    // Initialize particles
-    function initParticles() {
-      const particles = document.getElementById('particles');
-      for (let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'absolute w-1 h-1 bg-white rounded-full opacity-20';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 3 + 's';
-        particle.style.animation = 'floating 6s ease-in-out infinite';
-        particles.appendChild(particle);
-      }
-    }
 
     // Auth state listener
     onAuthStateChanged(auth, (user) => {
@@ -589,20 +592,19 @@
 
     // Load user profile
     function loadUserProfile(user) {
-      userAvatar.src = user.photoURL || 'https://via.placeholder.com/32';
+      userAvatar.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User') + '&background=6366f1&color=fff';
       userName.textContent = user.displayName || 'User';
     }
 
     // User menu toggle
-    userMenuBtn?.addEventListener('click', () => {
+    userMenuBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
       userDropdown.classList.toggle('hidden');
     });
 
     // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!userMenuBtn?.contains(e.target)) {
-        userDropdown.classList.add('hidden');
-      }
+    document.addEventListener('click', () => {
+      userDropdown.classList.add('hidden');
     });
 
     // Logout
@@ -819,6 +821,7 @@ Return only the optimized prompt, ready to use with any AI model.`;
         promptOutputContainer.classList.add('hidden');
         generateBtn.disabled = true;
         generateText.textContent = 'Generating...';
+        generateIcon.innerHTML = '<div class="loading-spinner inline-block"></div>';
 
         // Generate prompt
         const generatedPrompt = await generatePromptWithAPI(input, category, style);
@@ -844,6 +847,7 @@ Return only the optimized prompt, ready to use with any AI model.`;
         loadingIndicator.classList.add('hidden');
         generateBtn.disabled = false;
         generateText.textContent = 'Generate Prompt';
+        generateIcon.innerHTML = '<i class="fas fa-bolt"></i>';
       }
     });
 
@@ -880,12 +884,11 @@ Return only the optimized prompt, ready to use with any AI model.`;
     copyBtn?.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(lastPrompt);
-        const originalIcon = copyBtn.innerHTML;
-        copyBtn.innerHTML = '<i class="fas fa-check text-green-400"></i>';
+        copyBtn.innerHTML = '<i class="fas fa-check text-emerald-500"></i>';
         showNotification('Prompt copied to clipboard!');
         
         setTimeout(() => {
-          copyBtn.innerHTML = originalIcon;
+          copyBtn.innerHTML = '<i class="fas fa-copy text-slate-500 dark:text-slate-400 hover:text-indigo-500"></i>';
         }, 2000);
       } catch (error) {
         showError('Failed to copy to clipboard');
@@ -921,9 +924,12 @@ Return only the optimized prompt, ready to use with any AI model.`;
         chatContainer.innerHTML = '';
         
         if (querySnapshot.empty) {
+          emptyHistory.classList.remove('hidden');
           chatContainer.appendChild(emptyHistory);
           return;
         }
+        
+        emptyHistory.classList.add('hidden');
         
         const messages = [];
         querySnapshot.forEach((doc) => {
@@ -944,30 +950,34 @@ Return only the optimized prompt, ready to use with any AI model.`;
 
     function addChatItem(userMessage, assistantMessage, id) {
       const chatItem = document.createElement('div');
-      chatItem.className = 'glass-morphism rounded-lg p-4 slide-in';
+      chatItem.className = 'card p-4 slide-in';
       chatItem.innerHTML = `
         <div class="flex items-start justify-between mb-2">
           <div class="flex items-center space-x-2">
-            <i class="fas fa-user text-blue-400"></i>
-            <span class="text-sm text-gray-300">You asked:</span>
+            <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+              <i class="fas fa-user text-indigo-500 text-xs"></i>
+            </div>
+            <span class="text-sm text-slate-600 dark:text-slate-300">You asked:</span>
           </div>
-          <button class="delete-chat text-gray-400 hover:text-red-400 transition-colors" data-id="${id}">
-            <i class="fas fa-trash text-sm"></i>
+          <button class="delete-chat text-slate-400 hover:text-red-500 transition-colors" data-id="${id}">
+            <i class="fas fa-trash text-xs"></i>
           </button>
         </div>
-        <p class="text-white text-sm mb-4 pl-6">${userMessage}</p>
+        <p class="text-slate-700 dark:text-slate-200 text-sm mb-4 pl-8">${userMessage}</p>
         
         <div class="flex items-center space-x-2 mb-2">
-          <i class="fas fa-robot text-green-400"></i>
-          <span class="text-sm text-gray-300">AI generated:</span>
+          <div class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
+            <i class="fas fa-robot text-emerald-500 text-xs"></i>
+          </div>
+          <span class="text-sm text-slate-600 dark:text-slate-300">AI generated:</span>
         </div>
-        <div class="text-white text-sm pl-6 bg-white/5 rounded-lg p-3 whitespace-pre-wrap">${assistantMessage}</div>
+        <div class="text-slate-700 dark:text-slate-200 text-sm pl-8 bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3 whitespace-pre-wrap">${assistantMessage}</div>
         
-        <div class="flex justify-end mt-3 space-x-2">
-          <button class="copy-chat-item text-gray-400 hover:text-blue-400 transition-colors text-sm" data-text="${assistantMessage}">
+        <div class="flex justify-end mt-3 space-x-3">
+          <button class="copy-chat-item text-xs py-1 px-2 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300" data-text="${assistantMessage}">
             <i class="fas fa-copy mr-1"></i>Copy
           </button>
-          <button class="reuse-input text-gray-400 hover:text-green-400 transition-colors text-sm" data-input="${userMessage.split(' (')[0]}">
+          <button class="reuse-input text-xs py-1 px-2 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300" data-input="${userMessage.split(' (')[0]}">
             <i class="fas fa-redo mr-1"></i>Reuse
           </button>
         </div>
@@ -1019,7 +1029,7 @@ Return only the optimized prompt, ready to use with any AI model.`;
         );
         
         const querySnapshot = await getDocs(q);
-        let exportText = `AI Prompt Generator - Chat History\nExported: ${new Date().toLocaleString()}\n\n`;
+        let exportText = `PromptCraft - Chat History\nExported: ${new Date().toLocaleString()}\n\n`;
         
         const messages = [];
         querySnapshot.forEach((doc) => {
@@ -1064,6 +1074,7 @@ Return only the optimized prompt, ready to use with any AI model.`;
           
           await Promise.all(deletePromises);
           chatContainer.innerHTML = '';
+          emptyHistory.classList.remove('hidden');
           chatContainer.appendChild(emptyHistory);
           
           showNotification('Chat history cleared');
@@ -1084,25 +1095,27 @@ Return only the optimized prompt, ready to use with any AI model.`;
 
     function showNotification(message) {
       const notification = document.createElement('div');
-      notification.className = 'fixed top-4 right-4 glass-morphism rounded-lg p-4 text-white z-50 slide-in';
+      notification.className = 'fixed top-4 right-4 card px-4 py-3 text-sm z-50 slide-in';
       notification.innerHTML = `
         <div class="flex items-center space-x-2">
-          <i class="fas fa-check-circle text-green-400"></i>
-          <span>${message}</span>
+          <i class="fas fa-check-circle text-emerald-500"></i>
+          <span class="text-slate-700 dark:text-slate-200">${message}</span>
         </div>
       `;
       
       document.body.appendChild(notification);
       
       setTimeout(() => {
-        notification.remove();
+        notification.classList.add('opacity-0');
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
       }, 3000);
     }
 
     // Initialize app
     function initApp() {
       loadTheme();
-      initParticles();
       
       // Close settings panel when clicking outside
       settingsPanel?.addEventListener('click', (e) => {
@@ -1123,12 +1136,6 @@ Return only the optimized prompt, ready to use with any AI model.`;
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !loadingIndicator.classList.contains('hidden') === false) {
           e.preventDefault();
           promptForm?.dispatchEvent(new Event('submit'));
-        }
-        
-        // Escape to close panels
-        if (e.key === 'Escape') {
-          settingsPanel.classList.add('hidden');
-          userDropdown.classList.add('hidden');
         }
       });
     }
