@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Prompt Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .dark body {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    }
+    
+    .glass-morphism {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dark .glass-morphism {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .neon-glow {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+    
+    .dark .neon-glow {
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+    }
+    
+    .cyber-border {
+      position: relative;
+      background: linear-gradient(45deg, #00f5ff, #ff00ff, #00f5ff);
+      background-size: 200% 200%;
+      animation: gradient-shift 3s ease infinite;
+      padding: 2px;
+      border-radius: 12px;
+    }
+    
+    .cyber-border > * {
+      background: white;
+      border-radius: 10px;
+    }
+    
+    .dark .cyber-border > * {
+      background: #1f2937;
+    }
+    
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .typing-animation {
+      border-right: 2px solid #3b82f6;
+      animation: blink 1s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 50% { border-color: transparent; }
+      51%, 100% { border-color: #3b82f6; }
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .dark .gradient-text {
+      background: linear-gradient(135deg, #00f5ff 0%, #ff00ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .floating {
+      animation: floating 6s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .slide-in {
+      animation: slideIn 0.5s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      border-radius: 10px;
+    }
+    
+    .dark ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #00f5ff, #ff00ff);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+      .glass-morphism {
+        margin: 10px;
+        padding: 20px;
+      }
+    }
+    
+    /* Loading animation */
+    .loading-dots {
+      display: inline-block;
+    }
+    
+    .loading-dots::after {
+      content: '';
+      animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+      0% { content: '.'; }
+      33% { content: '..'; }
+      66% { content: '...'; }
+      100% { content: '.'; }
+    }
+  </style>
+</head>
+<body class="min-h-screen transition-all duration-300">
+  <div id="app" class="min-h-screen">
+    <!-- Background particles -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div id="particles"></div>
+    </div>
+    
+    <!-- Auth Screens -->
+    <div id="auth-container" class="flex items-center justify-center min-h-screen px-4">
+      <div class="w-full max-w-md">
+        <!-- Login/Signup Screen -->
+        <div id="auth-screen" class="glass-morphism rounded-2xl p-8 slide-in">
+          <div class="text-center mb-8">
+            <div class="floating">
+              <i class="fas fa-brain text-6xl gradient-text mb-4"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-2 gradient-text">AI Prompt Generator</h1>
+            <p class="text-gray-200 dark:text-gray-300">Unleash the power of AI with perfect prompts</p>
+          </div>
+          
+          <div id="error-message" class="hidden bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-4 backdrop-blur-sm"></div>
+          
+          <!-- Google Sign In Button -->
+          <button id="google-signin-btn" class="w-full cyber-border mb-6 group hover:scale-105 transition-all duration-300">
+            <div class="flex items-center justify-center py-4 px-6 space-x-3">
+              <svg class="w-6 h-6" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              <span class="text-gray-700 dark:text-white font-semibold">Continue with Google</span>
+            </div>
+          </button>
+          
+          <div class="text-center text-gray-300 text-sm">
+            <i class="fas fa-shield-alt mr-2"></i>
+            Secure authentication powered by Firebase
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main App -->
+    <div id="app-container" class="hidden">
+      <!-- Navigation -->
+      <nav class="glass-morphism border-b border-white/10 px-6 py-4">
+        <div class="container mx-auto flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <i class="fas fa-brain text-2xl gradient-text"></i>
+            <h1 class="text-xl font-bold text-white gradient-text">AI Prompt Generator</h1>
+          </div>
+          
+          <div class="flex items-center space-x-4">
+            <!-- Theme Toggle -->
+            <button id="theme-toggle" class="p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300">
+              <i class="fas fa-moon text-white dark:hidden"></i>
+              <i class="fas fa-sun text-white hidden dark:inline"></i>
+            </button>
+            
+            <!-- Settings Button -->
+            <button id="settings-btn" class="p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300">
+              <i class="fas fa-cog text-white"></i>
+            </button>
+            
+            <!-- User Profile -->
+            <div id="user-menu" class="relative">
+              <button id="user-menu-btn" class="flex items-center space-x-2 glass-morphism px-4 py-2 rounded-lg hover:neon-glow transition-all duration-300">
+                <img id="user-avatar" src="" alt="User" class="w-8 h-8 rounded-full">
+                <span id="user-name" class="text-white font-medium hidden md:inline"></span>
+                <i class="fas fa-chevron-down text-white text-sm"></i>
+              </button>
+              
+              <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 glass-morphism rounded-lg shadow-xl z-50">
+                <div class="py-2">
+                  <button id="logout-btn" class="w-full text-left px-4 py-2 text-white hover:bg-white/10 transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <!-- Settings Panel -->
+      <div id="settings-panel" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-morphism rounded-2xl p-8 w-full max-w-md">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-white gradient-text">Settings</h2>
+            <button id="close-settings" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+              <i class="fas fa-times text-white"></i>
+            </button>
+          </div>
+          
+          <div class="space-y-6">
+            <!-- API Provider -->
+            <div>
+              <label class="block text-white font-medium mb-2">AI Provider</label>
+              <select id="api-provider" class="w-full p-3 rounded-lg glass-morphism text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                <option value="openai">OpenAI GPT</option>
+                <option value="anthropic">Anthropic Claude</option>
+                <option value="google">Google Gemini</option>
+              </select>
+            </div>
+            
+            <!-- API Key -->
+            <div>
+              <label class="block text-white font-medium mb-2">API Key</label>
+              <div class="relative">
+                <input type="password" id="api-key" placeholder="Enter your API key" 
+                  class="w-full p-3 rounded-lg glass-morphism text-white placeholder-gray-400 border border-white/20 focus:border-blue-400 focus:outline-none pr-12">
+                <button id="toggle-api-key" class="absolute right-3 top-3 text-gray-400 hover:text-white">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <p class="text-sm text-gray-300 mt-1">Your API key is stored locally and never shared</p>
+            </div>
+            
+            <!-- Temperature -->
+            <div>
+              <label class="block text-white font-medium mb-2">Creativity Level</label>
+              <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7" 
+                class="w-full h-2 rounded-lg appearance-none cursor-pointer">
+              <div class="flex justify-between text-sm text-gray-300 mt-1">
+                <span>Focused</span>
+                <span id="temperature-value">0.7</span>
+                <span>Creative</span>
+              </div>
+            </div>
+            
+            <!-- Max Tokens -->
+            <div>
+              <label class="block text-white font-medium mb-2">Response Length</label>
+              <input type="range" id="max-tokens" min="100" max="2000" step="100" value="500" 
+                class="w-full h-2 rounded-lg appearance-none cursor-pointer">
+              <div class="flex justify-between text-sm text-gray-300 mt-1">
+                <span>Short</span>
+                <span id="max-tokens-value">500</span>
+                <span>Long</span>
+              </div>
+            </div>
+          </div>
+          
+          <button id="save-settings" class="w-full mt-8 cyber-border">
+            <div class="py-3 px-6 text-center font-semibold text-gray-800 dark:text-white">
+              Save Settings
+            </div>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="container mx-auto px-4 py-8">
+        <!-- Welcome Card -->
+        <div class="glass-morphism rounded-2xl p-8 mb-8 text-center">
+          <div class="floating">
+            <i class="fas fa-magic text-5xl gradient-text mb-4"></i>
+          </div>
+          <h2 class="text-3xl font-bold text-white gradient-text mb-4">Create Perfect AI Prompts</h2>
+          <p class="text-gray-200 max-w-2xl mx-auto">
+            Transform your ideas into powerful AI prompts. Our intelligent generator creates optimized prompts 
+            tailored for your specific needs across different AI models and use cases.
+          </p>
+        </div>
+        
+        <!-- Prompt Generator -->
+        <div class="grid lg:grid-cols-2 gap-8">
+          <!-- Input Section -->
+          <div class="glass-morphism rounded-2xl p-6">
+            <h3 class="text-xl font-bold text-white gradient-text mb-4 flex items-center">
+              <i class="fas fa-pencil-alt mr-2"></i>
+              Generate Prompt
+            </h3>
+            
+            <form id="prompt-form" class="space-y-4">
+              <div>
+                <label class="block text-white font-medium mb-2">What do you want to create?</label>
+                <textarea id="prompt-input" 
+                  placeholder="e.g., Write a blog post about sustainable technology, Create a marketing campaign for a new app, Generate creative writing ideas..."
+                  required
+                  class="w-full h-32 p-4 rounded-lg glass-morphism text-white placeholder-gray-400 border border-white/20 focus:border-blue-400 focus:outline-none resize-none"
+                ></textarea>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-white font-medium mb-2">Category</label>
+                  <select id="category-select" class="w-full p-3 rounded-lg glass-morphism text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                    <option value="general">General</option>
+                    <option value="writing">Writing</option>
+                    <option value="coding">Programming</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="creative">Creative</option>
+                    <option value="business">Business</option>
+                    <option value="education">Education</option>
+                    <option value="research">Research</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-white font-medium mb-2">Style</label>
+                  <select id="style-select" class="w-full p-3 rounded-lg glass-morphism text-white border border-white/20 focus:border-blue-400 focus:outline-none">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="creative">Creative</option>
+                    <option value="technical">Technical</option>
+                    <option value="academic">Academic</option>
+                    <option value="persuasive">Persuasive</option>
+                  </select>
+                </div>
+              </div>
+              
+              <button type="submit" class="w-full cyber-border group hover:scale-105 transition-all duration-300" id="generate-btn">
+                <div class="py-4 px-6 text-center font-bold text-gray-800 dark:text-white">
+                  <i class="fas fa-brain mr-2"></i>
+                  <span id="generate-text">Generate Prompt</span>
+                </div>
+              </button>
+            </form>
+          </div>
+          
+          <!-- Output Section -->
+          <div class="glass-morphism rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-bold text-white gradient-text flex items-center">
+                <i class="fas fa-lightbulb mr-2"></i>
+                Generated Prompt
+              </h3>
+              <div class="flex space-x-2">
+                <button id="copy-btn" class="hidden p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300 group">
+                  <i class="fas fa-copy text-white group-hover:scale-110 transition-transform"></i>
+                </button>
+                <button id="regenerate-btn" class="hidden p-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300 group">
+                  <i class="fas fa-redo text-white group-hover:rotate-180 transition-transform duration-500"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div id="loading-indicator" class="hidden text-center py-8">
+              <div class="inline-block w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p class="text-white">Crafting your perfect prompt<span class="loading-dots"></span></p>
+            </div>
+            
+            <div id="prompt-output-container" class="hidden">
+              <div id="prompt-output" class="glass-morphism rounded-lg p-6 min-h-32 text-white whitespace-pre-wrap border border-white/20 max-h-96 overflow-y-auto"></div>
+              <div class="mt-4 text-sm text-gray-300">
+                <i class="fas fa-info-circle mr-1"></i>
+                Click the copy button to use this prompt with your favorite AI
+              </div>
+            </div>
+            
+            <div id="empty-state" class="text-center py-12 text-gray-400">
+              <i class="fas fa-robot text-4xl mb-4 opacity-50"></i>
+              <p>Your generated prompt will appear here</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chat History -->
+        <div class="mt-8 glass-morphism rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-white gradient-text flex items-center">
+              <i class="fas fa-history mr-2"></i>
+              Recent Prompts
+            </h3>
+            <div class="flex space-x-2">
+              <button id="export-btn" class="px-4 py-2 rounded-lg glass-morphism hover:neon-glow transition-all duration-300 text-white text-sm">
+                <i class="fas fa-download mr-2"></i>
+                Export
+              </button>
+              <button id="clear-history-btn" class="px-4 py-2 rounded-lg glass-morphism hover:bg-red-500/20 transition-all duration-300 text-white text-sm">
+                <i class="fas fa-trash mr-2"></i>
+                Clear
+              </button>
+            </div>
+          </div>
+          
+          <div id="chat-container" class="space-y-4 max-h-96 overflow-y-auto">
+            <div id="empty-history" class="text-center py-12 text-gray-400">
+              <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+              <p>Your prompt history will appear here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Firebase Configuration
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithPopup,
+      GoogleAuthProvider,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      setDoc, 
+      getDocs, 
+      addDoc,
+      deleteDoc,
+      serverTimestamp,
+      orderBy,
+      query,
+      limit
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Firebase configuration - Replace with your actual config
+    const firebaseConfig = {
+ apiKey: "AIzaSyCb06hZb9iuRkICn3KojXi1nl-5AjqhRUM",
+  authDomain: "ai-app-1de8c.firebaseapp.com",
+  projectId: "ai-app-1de8c",
+  storageBucket: "ai-app-1de8c.firebasestorage.app",
+  messagingSenderId: "976099628319",
+  appId: "1:976099628319:web:30df1077c75620ac3d8c2a",
+  measurementId: "G-27ZRW9F1RT"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // DOM Elements
+    const authContainer = document.getElementById('auth-container');
+    const appContainer = document.getElementById('app-container');
+    const googleSigninBtn = document.getElementById('google-signin-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userMenuBtn = document.getElementById('user-menu-btn');
+    const userDropdown = document.getElementById('user-dropdown');
+    const userAvatar = document.getElementById('user-avatar');
+    const userName = document.getElementById('user-name');
+    const themeToggle = document.getElementById('theme-toggle');
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    const closeSettings = document.getElementById('close-settings');
+    const promptForm = document.getElementById('prompt-form');
+    const promptInput = document.getElementById('prompt-input');
+    const categorySelect = document.getElementById('category-select');
+    const styleSelect = document.getElementById('style-select');
+    const generateBtn = document.getElementById('generate-btn');
+    const generateText = document.getElementById('generate-text');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const promptOutputContainer = document.getElementById('prompt-output-container');
+    const promptOutput = document.getElementById('prompt-output');
+    const emptyState = document.getElementById('empty-state');
+    const copyBtn = document.getElementById('copy-btn');
+    const regenerateBtn = document.getElementById('regenerate-btn');
+    const chatContainer = document.getElementById('chat-container');
+    const emptyHistory = document.getElementById('empty-history');
+    const exportBtn = document.getElementById('export-btn');
+    const clearHistoryBtn = document.getElementById('clear-history-btn');
+    const errorMessage = document.getElementById('error-message');
+
+    // Settings elements
+    const apiProvider = document.getElementById('api-provider');
+    const apiKey = document.getElementById('api-key');
+    const toggleApiKey = document.getElementById('toggle-api-key');
+    const temperature = document.getElementById('temperature');
+    const temperatureValue = document.getElementById('temperature-value');
+    const maxTokens = document.getElementById('max-tokens');
+    const maxTokensValue = document.getElementById('max-tokens-value');
+    const saveSettings = document.getElementById('save-settings');
+
+    // Global variables
+    let currentUser = null;
+    let lastPrompt = '';
+    let lastInput = '';
+
+    // Initialize particles
+    function initParticles() {
+      const particles = document.getElementById('particles');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'absolute w-1 h-1 bg-white rounded-full opacity-20';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 3 + 's';
+        particle.style.animation = 'floating 6s ease-in-out infinite';
+        particles.appendChild(particle);
+      }
+    }
+
+    // Auth state listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        authContainer.classList.add('hidden');
+        appContainer.classList.remove('hidden');
+        loadUserProfile(user);
+        loadChatHistory();
+        loadSettings();
+      } else {
+        currentUser = null;
+        authContainer.classList.remove('hidden');
+        appContainer.classList.add('hidden');
+      }
+    });
+
+    // Google Sign In
+    googleSigninBtn?.addEventListener('click', async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        // Save user profile
+        await setDoc(doc(db, 'users', user.uid), {
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          lastLogin: serverTimestamp()
+        }, { merge: true });
+        
+      } catch (error) {
+        showError('Sign in failed: ' + error.message);
+      }
+    });
+
+    // Load user profile
+    function loadUserProfile(user) {
+      userAvatar.src = user.photoURL || 'https://via.placeholder.com/32';
+      userName.textContent = user.displayName || 'User';
+    }
+
+    // User menu toggle
+    userMenuBtn?.addEventListener('click', () => {
+      userDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!userMenuBtn?.contains(e.target)) {
+        userDropdown.classList.add('hidden');
+      }
+    });
+
+    // Logout
+    logoutBtn?.addEventListener('click', async () => {
+      if (confirm('Are you sure you want to logout?')) {
+        try {
+          await signOut(auth);
+        } catch (error) {
+          showError('Logout failed: ' + error.message);
+        }
+      }
+    });
+
+    // Theme toggle
+    themeToggle?.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      localStorage.setItem('theme', theme);
+    });
+
+    // Load saved theme
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    }
+
+    // Settings panel
+    settingsBtn?.addEventListener('click', () => {
+      settingsPanel.classList.remove('hidden');
+    });
+
+    closeSettings?.addEventListener('click', () => {
+      settingsPanel.classList.add('hidden');
+    });
+
+    // API key visibility toggle
+    toggleApiKey?.addEventListener('click', () => {
+      const type = apiKey.type === 'password' ? 'text' : 'password';
+      apiKey.type = type;
+      toggleApiKey.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Settings sliders
+    temperature?.addEventListener('input', (e) => {
+      temperatureValue.textContent = e.target.value;
+    });
+
+    maxTokens?.addEventListener('input', (e) => {
+      maxTokensValue.textContent = e.target.value;
+    });
+
+    // Save settings
+    saveSettings?.addEventListener('click', () => {
+      const settings = {
+        apiProvider: apiProvider.value,
+        apiKey: apiKey.value,
+        temperature: parseFloat(temperature.value),
+        maxTokens: parseInt(maxTokens.value)
+      };
+      
+      localStorage.setItem('promptGeneratorSettings', JSON.stringify(settings));
+      settingsPanel.classList.add('hidden');
+      showNotification('Settings saved successfully!');
+    });
+
+    // Load settings
+    function loadSettings() {
+      const savedSettings = localStorage.getItem('promptGeneratorSettings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        apiProvider.value = settings.apiProvider || 'openai';
+        apiKey.value = settings.apiKey || '';
+        temperature.value = settings.temperature || 0.7;
+        maxTokens.value = settings.maxTokens || 500;
+        temperatureValue.textContent = temperature.value;
+        maxTokensValue.textContent = maxTokens.value;
+      }
+    }
+
+    // API Calls for different providers
+    async function generatePromptWithAPI(input, category, style) {
+      const settings = JSON.parse(localStorage.getItem('promptGeneratorSettings') || '{}');
+      const apiKeyValue = settings.apiKey;
+      
+      if (!apiKeyValue) {
+        throw new Error('Please configure your API key in settings');
+      }
+
+      const prompt = createSystemPrompt(input, category, style);
+      
+      switch (settings.apiProvider || 'openai') {
+        case 'openai':
+          return await callOpenAI(prompt, settings);
+        case 'anthropic':
+          return await callAnthropic(prompt, settings);
+        case 'google':
+          return await callGemini(prompt, settings);
+        default:
+          throw new Error('Unknown API provider');
+      }
+    }
+
+    function createSystemPrompt(input, category, style) {
+      return `You are an expert AI prompt engineer. Create an optimized, detailed prompt based on the following:
+
+User Input: "${input}"
+Category: ${category}
+Style: ${style}
+
+Generate a comprehensive, well-structured prompt that:
+1. Is clear and specific
+2. Includes relevant context and constraints
+3. Specifies the desired output format
+4. Uses best practices for AI prompting
+5. Is optimized for the ${style} style and ${category} category
+
+Return only the optimized prompt, ready to use with any AI model.`;
+    }
+
+    async function callOpenAI(prompt, settings) {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${settings.apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: settings.temperature || 0.7,
+          max_tokens: settings.maxTokens || 500
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'OpenAI API error');
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    }
+
+    async function callAnthropic(prompt, settings) {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': settings.apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-sonnet-20240229',
+          max_tokens: settings.maxTokens || 500,
+          temperature: settings.temperature || 0.7,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Anthropic API error');
+      }
+
+      const data = await response.json();
+      return data.content[0].text;
+    }
+
+    async function callGemini(prompt, settings) {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${settings.apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: settings.temperature || 0.7,
+            maxOutputTokens: settings.maxTokens || 500
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Google Gemini API error');
+      }
+
+      const data = await response.json();
+      return data.candidates[0].content.parts[0].text;
+    }
+
+    // Prompt generation form
+    promptForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const input = promptInput.value.trim();
+      const category = categorySelect.value;
+      const style = styleSelect.value;
+      
+      if (!input) {
+        showError('Please enter what you want to create');
+        return;
+      }
+
+      lastInput = input;
+      
+      try {
+        // Show loading state
+        loadingIndicator.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        promptOutputContainer.classList.add('hidden');
+        generateBtn.disabled = true;
+        generateText.textContent = 'Generating...';
+
+        // Generate prompt
+        const generatedPrompt = await generatePromptWithAPI(input, category, style);
+        lastPrompt = generatedPrompt;
+
+        // Show result
+        promptOutput.textContent = generatedPrompt;
+        promptOutputContainer.classList.remove('hidden');
+        copyBtn.classList.remove('hidden');
+        regenerateBtn.classList.remove('hidden');
+
+        // Save to history
+        await saveChatMessage('user', `${input} (${category}, ${style})`);
+        await saveChatMessage('assistant', generatedPrompt);
+        await loadChatHistory();
+
+        // Clear input
+        promptInput.value = '';
+        
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        loadingIndicator.classList.add('hidden');
+        generateBtn.disabled = false;
+        generateText.textContent = 'Generate Prompt';
+      }
+    });
+
+    // Regenerate button
+    regenerateBtn?.addEventListener('click', async () => {
+      if (!lastInput) return;
+      
+      const category = categorySelect.value;
+      const style = styleSelect.value;
+      
+      try {
+        loadingIndicator.classList.remove('hidden');
+        promptOutputContainer.classList.add('hidden');
+        regenerateBtn.disabled = true;
+
+        const generatedPrompt = await generatePromptWithAPI(lastInput, category, style);
+        lastPrompt = generatedPrompt;
+
+        promptOutput.textContent = generatedPrompt;
+        promptOutputContainer.classList.remove('hidden');
+
+        await saveChatMessage('assistant', generatedPrompt);
+        await loadChatHistory();
+        
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        loadingIndicator.classList.add('hidden');
+        regenerateBtn.disabled = false;
+      }
+    });
+
+    // Copy to clipboard
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(lastPrompt);
+        const originalIcon = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check text-green-400"></i>';
+        showNotification('Prompt copied to clipboard!');
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = originalIcon;
+        }, 2000);
+      } catch (error) {
+        showError('Failed to copy to clipboard');
+      }
+    });
+
+    // Chat history functions
+    async function saveChatMessage(role, message) {
+      if (!currentUser) return;
+      
+      try {
+        await addDoc(collection(db, 'users', currentUser.uid, 'chats'), {
+          role: role,
+          message: message,
+          timestamp: serverTimestamp()
+        });
+      } catch (error) {
+        console.error('Error saving chat message:', error);
+      }
+    }
+
+    async function loadChatHistory() {
+      if (!currentUser) return;
+      
+      try {
+        const q = query(
+          collection(db, 'users', currentUser.uid, 'chats'),
+          orderBy('timestamp', 'desc'),
+          limit(20)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        chatContainer.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          chatContainer.appendChild(emptyHistory);
+          return;
+        }
+        
+        const messages = [];
+        querySnapshot.forEach((doc) => {
+          messages.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Group messages by conversation
+        for (let i = messages.length - 1; i >= 0; i -= 2) {
+          if (i > 0 && messages[i].role === 'assistant' && messages[i-1].role === 'user') {
+            addChatItem(messages[i-1].message, messages[i].message, messages[i].id);
+          }
+        }
+        
+      } catch (error) {
+        console.error('Error loading chat history:', error);
+      }
+    }
+
+    function addChatItem(userMessage, assistantMessage, id) {
+      const chatItem = document.createElement('div');
+      chatItem.className = 'glass-morphism rounded-lg p-4 slide-in';
+      chatItem.innerHTML = `
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-user text-blue-400"></i>
+            <span class="text-sm text-gray-300">You asked:</span>
+          </div>
+          <button class="delete-chat text-gray-400 hover:text-red-400 transition-colors" data-id="${id}">
+            <i class="fas fa-trash text-sm"></i>
+          </button>
+        </div>
+        <p class="text-white text-sm mb-4 pl-6">${userMessage}</p>
+        
+        <div class="flex items-center space-x-2 mb-2">
+          <i class="fas fa-robot text-green-400"></i>
+          <span class="text-sm text-gray-300">AI generated:</span>
+        </div>
+        <div class="text-white text-sm pl-6 bg-white/5 rounded-lg p-3 whitespace-pre-wrap">${assistantMessage}</div>
+        
+        <div class="flex justify-end mt-3 space-x-2">
+          <button class="copy-chat-item text-gray-400 hover:text-blue-400 transition-colors text-sm" data-text="${assistantMessage}">
+            <i class="fas fa-copy mr-1"></i>Copy
+          </button>
+          <button class="reuse-input text-gray-400 hover:text-green-400 transition-colors text-sm" data-input="${userMessage.split(' (')[0]}">
+            <i class="fas fa-redo mr-1"></i>Reuse
+          </button>
+        </div>
+      `;
+      
+      chatContainer.appendChild(chatItem);
+    }
+
+    // Chat item interactions
+    chatContainer?.addEventListener('click', async (e) => {
+      if (e.target.closest('.copy-chat-item')) {
+        const text = e.target.closest('.copy-chat-item').dataset.text;
+        try {
+          await navigator.clipboard.writeText(text);
+          showNotification('Copied to clipboard!');
+        } catch (error) {
+          showError('Failed to copy');
+        }
+      }
+      
+      if (e.target.closest('.reuse-input')) {
+        const input = e.target.closest('.reuse-input').dataset.input;
+        promptInput.value = input;
+        promptInput.focus();
+      }
+      
+      if (e.target.closest('.delete-chat')) {
+        if (confirm('Delete this conversation?')) {
+          const id = e.target.closest('.delete-chat').dataset.id;
+          try {
+            await deleteDoc(doc(db, 'users', currentUser.uid, 'chats', id));
+            await loadChatHistory();
+            showNotification('Conversation deleted');
+          } catch (error) {
+            showError('Failed to delete conversation');
+          }
+        }
+      }
+    });
+
+    // Export chat history
+    exportBtn?.addEventListener('click', async () => {
+      if (!currentUser) return;
+      
+      try {
+        const q = query(
+          collection(db, 'users', currentUser.uid, 'chats'),
+          orderBy('timestamp', 'desc')
+        );
+        
+        const querySnapshot = await getDocs(q);
+        let exportText = `AI Prompt Generator - Chat History\nExported: ${new Date().toLocaleString()}\n\n`;
+        
+        const messages = [];
+        querySnapshot.forEach((doc) => {
+          messages.push(doc.data());
+        });
+        
+        for (let i = messages.length - 1; i >= 0; i -= 2) {
+          if (i > 0 && messages[i].role === 'assistant' && messages[i-1].role === 'user') {
+            exportText += `USER: ${messages[i-1].message}\n\nAI: ${messages[i].message}\n\n${'='.repeat(80)}\n\n`;
+          }
+        }
+        
+        const blob = new Blob([exportText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `prompt-history-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showNotification('History exported successfully!');
+      } catch (error) {
+        showError('Failed to export history');
+      }
+    });
+
+    // Clear chat history
+    clearHistoryBtn?.addEventListener('click', async () => {
+      if (!currentUser) return;
+      
+      if (confirm('This will permanently delete your entire chat history. Continue?')) {
+        try {
+          const q = query(collection(db, 'users', currentUser.uid, 'chats'));
+          const querySnapshot = await getDocs(q);
+          
+          const deletePromises = [];
+          querySnapshot.forEach((doc) => {
+            deletePromises.push(deleteDoc(doc.ref));
+          });
+          
+          await Promise.all(deletePromises);
+          chatContainer.innerHTML = '';
+          chatContainer.appendChild(emptyHistory);
+          
+          showNotification('Chat history cleared');
+        } catch (error) {
+          showError('Failed to clear history');
+        }
+      }
+    });
+
+    // Utility functions
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.remove('hidden');
+      setTimeout(() => {
+        errorMessage.classList.add('hidden');
+      }, 5000);
+    }
+
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 right-4 glass-morphism rounded-lg p-4 text-white z-50 slide-in';
+      notification.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-check-circle text-green-400"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // Initialize app
+    function initApp() {
+      loadTheme();
+      initParticles();
+      
+      // Close settings panel when clicking outside
+      settingsPanel?.addEventListener('click', (e) => {
+        if (e.target === settingsPanel) {
+          settingsPanel.classList.add('hidden');
+        }
+      });
+      
+      // Auto-resize textarea
+      promptInput?.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+      });
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + Enter to generate
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !loadingIndicator.classList.contains('hidden') === false) {
+          e.preventDefault();
+          promptForm?.dispatchEvent(new Event('submit'));
+        }
+        
+        // Escape to close panels
+        if (e.key === 'Escape') {
+          settingsPanel.classList.add('hidden');
+          userDropdown.classList.add('hidden');
+        }
+      });
+    }
+
+    // Start the app
+    initApp();
+  </script>
+</body>
+</html>
